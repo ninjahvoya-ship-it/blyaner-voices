@@ -78,15 +78,13 @@
 </head>
 <body class="antialiased py-20 px-6 transition-colors duration-500" id="body-bg">
 
-    <!-- Тоггл темы (двойной переключатель) -->
+    <!-- Тоггл темы (двойной переключатель только с иконками) -->
     <div class="fixed top-6 right-6 z-50 flex items-center p-1.5 rounded-full backdrop-blur-md transition-all duration-300" id="theme-switcher-bg">
-        <button id="btn-light" class="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold transition-all">
-            <i class="ph-bold ph-sun text-lg"></i>
-            Светлая
+        <button id="btn-light" class="w-10 h-10 rounded-full flex items-center justify-center transition-all">
+            <i class="ph-bold ph-sun text-xl"></i>
         </button>
-        <button id="btn-dark" class="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold transition-all">
-            <i class="ph-bold ph-moon text-lg"></i>
-            Тёмная
+        <button id="btn-dark" class="w-10 h-10 rounded-full flex items-center justify-center transition-all">
+            <i class="ph-bold ph-moon text-xl"></i>
         </button>
     </div>
 
@@ -239,8 +237,8 @@
             // Стилизуем переключатель для фиолетового фона
             themeSwitcherBg.className = 'fixed top-6 right-6 z-50 flex items-center p-1.5 rounded-full backdrop-blur-md transition-all duration-300 bg-white/20 border border-white/30 shadow-lg';
             
-            btnLight.className = 'flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold transition-all bg-white text-blyaner-purple shadow-sm';
-            btnDark.className = 'flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold transition-all text-white hover:bg-white/10';
+            btnLight.className = 'w-10 h-10 rounded-full flex items-center justify-center transition-all bg-white text-blyaner-purple shadow-sm';
+            btnDark.className = 'w-10 h-10 rounded-full flex items-center justify-center transition-all text-white hover:bg-white/10';
             
             restartAnimations();
         }
@@ -256,8 +254,8 @@
             // Стилизуем переключатель для серого фона
             themeSwitcherBg.className = 'fixed top-6 right-6 z-50 flex items-center p-1.5 rounded-full backdrop-blur-md transition-all duration-300 bg-white border border-gray-200 shadow-lg';
             
-            btnLight.className = 'flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold transition-all text-gray-500 hover:bg-gray-100';
-            btnDark.className = 'flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold transition-all bg-blyaner-dark text-white shadow-sm';
+            btnLight.className = 'w-10 h-10 rounded-full flex items-center justify-center transition-all text-gray-500 hover:bg-gray-100';
+            btnDark.className = 'w-10 h-10 rounded-full flex items-center justify-center transition-all bg-blyaner-dark text-white shadow-sm';
             
             restartAnimations();
         }
