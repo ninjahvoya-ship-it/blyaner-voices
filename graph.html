@@ -76,19 +76,24 @@
         }
     </style>
 </head>
-<body class="antialiased py-20 px-6 bg-[#F4F3F8]" id="body-bg">
+<body class="antialiased py-20 px-6 transition-colors duration-500" id="body-bg">
 
-    <!-- Тоггл темы -->
-    <div class="fixed top-6 right-6 z-50">
-        <button id="theme-toggle" class="w-14 h-14 bg-white rounded-full shadow-lg border border-gray-200 flex items-center justify-center text-blyaner-purple hover:scale-110 transition-transform">
-            <i class="ph-fill ph-moon text-2xl" id="theme-icon"></i>
+    <!-- Тоггл темы (двойной переключатель) -->
+    <div class="fixed top-6 right-6 z-50 flex items-center p-1.5 rounded-full backdrop-blur-md transition-all duration-300" id="theme-switcher-bg">
+        <button id="btn-light" class="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold transition-all">
+            <i class="ph-bold ph-sun text-lg"></i>
+            Светлая
+        </button>
+        <button id="btn-dark" class="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold transition-all">
+            <i class="ph-bold ph-moon text-lg"></i>
+            Тёмная
         </button>
     </div>
 
     <div class="max-w-7xl mx-auto" id="graphs-container">
 
         <!-- ================= СВЕТЛЫЙ БЛОК ================= -->
-        <div id="light-block" class="bg-blyaner-gray rounded-[40px] p-10 md:p-14 relative overflow-hidden flex flex-col gap-10 border border-gray-200 shadow-sm hidden">
+        <div id="light-block" class="bg-blyaner-gray rounded-[40px] p-10 md:p-14 relative overflow-hidden flex flex-col gap-10 shadow-xl border border-white/50 hidden">
             
             <div class="relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-8">
                 <div class="max-w-3xl">
@@ -104,7 +109,7 @@
                     </p>
                 </div>
                 
-                <div class="flex flex-col gap-3 shrink-0 bg-white/50 backdrop-blur p-4 rounded-2xl border border-white">
+                <div class="flex flex-col gap-3 shrink-0 bg-white/50 backdrop-blur p-4 rounded-2xl border border-white shadow-sm">
                     <div class="flex items-center gap-3">
                         <div class="w-8 h-1 border-t-2 border-dashed border-gray-400"></div>
                         <span class="text-sm font-bold text-gray-500 uppercase tracking-wide">План на день</span>
@@ -145,7 +150,7 @@
         </div>
 
         <!-- ================= ТЕМНЫЙ БЛОК ================= -->
-        <div id="dark-block" class="bg-blyaner-sidebar rounded-[40px] p-10 md:p-14 shadow-[0_30px_60px_rgba(139,126,200,0.2)] relative overflow-hidden flex flex-col gap-10 border border-blyaner-purpleDark/30">
+        <div id="dark-block" class="bg-blyaner-sidebar rounded-[40px] p-10 md:p-14 shadow-[0_30px_60px_rgba(139,126,200,0.2)] relative overflow-hidden flex flex-col gap-10 border border-blyaner-purpleDark/30 hidden">
             
             <div class="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
             <div class="absolute bottom-0 left-0 w-96 h-96 bg-white/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 pointer-events-none"></div>
@@ -210,11 +215,12 @@
         const bodyBg = document.getElementById('body-bg');
         const lightBlock = document.getElementById('light-block');
         const darkBlock = document.getElementById('dark-block');
-        const themeIcon = document.getElementById('theme-icon');
-        const themeToggle = document.getElementById('theme-toggle');
+        const btnLight = document.getElementById('btn-light');
+        const btnDark = document.getElementById('btn-dark');
+        const themeSwitcherBg = document.getElementById('theme-switcher-bg');
         const container = document.getElementById('graphs-container');
 
-        let isDark = true; // Начинаем с фиолетовой версии
+        let isDark = false; // Светлая включена по умолчанию
 
         function restartAnimations() {
             container.classList.add('restart-animation');
@@ -222,27 +228,45 @@
             container.classList.remove('restart-animation');
         }
 
-        themeToggle.addEventListener('click', () => {
-            isDark = !isDark;
+        function setLight() {
+            isDark = false;
+            darkBlock.classList.add('hidden');
+            lightBlock.classList.remove('hidden');
             
-            if (isDark) {
-                // Переключаем на темную (фиолетовую) версию
-                lightBlock.classList.add('hidden');
-                darkBlock.classList.remove('hidden');
-                bodyBg.className = 'antialiased py-20 px-6 bg-[#F4F3F8]';
-                themeIcon.className = 'ph-fill ph-sun text-2xl text-blyaner-lime';
-                themeToggle.className = 'w-14 h-14 bg-blyaner-dark rounded-full shadow-lg border border-gray-700 flex items-center justify-center hover:scale-110 transition-transform';
-            } else {
-                // Переключаем на светлую (серую) версию
-                darkBlock.classList.add('hidden');
-                lightBlock.classList.remove('hidden');
-                bodyBg.className = 'antialiased py-20 px-6 bg-[#8B7EC8]';
-                themeIcon.className = 'ph-fill ph-moon text-2xl text-blyaner-purple';
-                themeToggle.className = 'w-14 h-14 bg-white rounded-full shadow-lg border border-gray-200 flex items-center justify-center hover:scale-110 transition-transform';
-            }
+            // Светлая тема = Фиолетовый фон страницы, светлый блок
+            bodyBg.className = 'antialiased py-20 px-6 transition-colors duration-500 bg-[#8B7EC8]';
+            
+            // Стилизуем переключатель для фиолетового фона
+            themeSwitcherBg.className = 'fixed top-6 right-6 z-50 flex items-center p-1.5 rounded-full backdrop-blur-md transition-all duration-300 bg-white/20 border border-white/30 shadow-lg';
+            
+            btnLight.className = 'flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold transition-all bg-white text-blyaner-purple shadow-sm';
+            btnDark.className = 'flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold transition-all text-white hover:bg-white/10';
             
             restartAnimations();
-        });
+        }
+
+        function setDark() {
+            isDark = true;
+            lightBlock.classList.add('hidden');
+            darkBlock.classList.remove('hidden');
+            
+            // Темная тема = Серый фон страницы, фиолетовый блок
+            bodyBg.className = 'antialiased py-20 px-6 transition-colors duration-500 bg-[#F4F3F8]';
+            
+            // Стилизуем переключатель для серого фона
+            themeSwitcherBg.className = 'fixed top-6 right-6 z-50 flex items-center p-1.5 rounded-full backdrop-blur-md transition-all duration-300 bg-white border border-gray-200 shadow-lg';
+            
+            btnLight.className = 'flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold transition-all text-gray-500 hover:bg-gray-100';
+            btnDark.className = 'flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold transition-all bg-blyaner-dark text-white shadow-sm';
+            
+            restartAnimations();
+        }
+
+        btnLight.addEventListener('click', setLight);
+        btnDark.addEventListener('click', setDark);
+
+        // Инициализация при загрузке
+        setLight();
     </script>
 </body>
 </html>
