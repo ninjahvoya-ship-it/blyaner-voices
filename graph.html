@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Блянер — Ожидание и Реальность</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        blyaner: {
+                            purple: '#8B7EC8',
+                            purpleDark: '#6A5AAB',
+                            lime: '#D4E84D',
+                            dark: '#2D2B3D',
+                            gray: '#F4F3F8',
+                            sidebar: '#8B7EC8'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; transition: background-color 0.5s ease; }
+
+        .path-plan {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: drawLine 3s ease-out forwards;
+        }
+
+        .path-reality {
+            stroke-dasharray: 4000;
+            stroke-dashoffset: 4000;
+            animation: drawLine 5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            animation-delay: 0.5s;
+        }
+
+        @keyframes drawLine {
+            to { stroke-dashoffset: 0; }
+        }
+
+        .bed-icon {
+            opacity: 0;
+            animation: fadeIn 0.5s ease-out forwards;
+            animation-delay: 5.5s;
+        }
+
+        .star-icon {
+            opacity: 0;
+            animation: fadeIn 0.5s ease-out forwards;
+            animation-delay: 3s;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        /* Чтобы анимация перезапускалась при переключении */
+        .restart-animation .path-plan,
+        .restart-animation .path-reality,
+        .restart-animation .star-icon,
+        .restart-animation .bed-icon {
+            animation: none !important;
+        }
+    </style>
+</head>
+<body class="antialiased py-20 px-6 bg-[#F4F3F8]" id="body-bg">
+
+    <!-- Тоггл темы -->
+    <div class="fixed top-6 right-6 z-50">
+        <button id="theme-toggle" class="w-14 h-14 bg-white rounded-full shadow-lg border border-gray-200 flex items-center justify-center text-blyaner-purple hover:scale-110 transition-transform">
+            <i class="ph-fill ph-moon text-2xl" id="theme-icon"></i>
+        </button>
+    </div>
+
+    <div class="max-w-7xl mx-auto" id="graphs-container">
+
+        <!-- ================= СВЕТЛЫЙ БЛОК ================= -->
+        <div id="light-block" class="bg-blyaner-gray rounded-[40px] p-10 md:p-14 relative overflow-hidden flex flex-col gap-10 border border-gray-200 shadow-sm hidden">
+            
+            <div class="relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-8">
+                <div class="max-w-3xl">
+                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blyaner-purple/10 text-blyaner-purple font-bold text-sm mb-6 uppercase tracking-widest border border-blyaner-purple/20">
+                        <i class="ph-bold ph-chart-line-up"></i>
+                        Ожидание vs Реальность
+                    </div>
+                    <h2 class="text-4xl md:text-5xl font-black text-blyaner-dark leading-tight">
+                        Блянер не исправит кривую.
+                    </h2>
+                    <p class="text-xl text-gray-500 font-medium mt-4">
+                        Но хотя бы измерит, сколько времени ты в ней провел.
+                    </p>
+                </div>
+                
+                <div class="flex flex-col gap-3 shrink-0 bg-white/50 backdrop-blur p-4 rounded-2xl border border-white">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-1 border-t-2 border-dashed border-gray-400"></div>
+                        <span class="text-sm font-bold text-gray-500 uppercase tracking-wide">План на день</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-2 rounded-full bg-blyaner-purple"></div>
+                        <span class="text-sm font-black text-blyaner-dark uppercase tracking-wide">Реальность</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="relative w-full h-[450px] mt-4 bg-white rounded-3xl border border-white shadow-sm p-6">
+                
+                <div class="absolute left-6 top-6 bottom-12 border-l-2 border-gray-100"></div>
+                <div class="absolute left-6 bottom-12 right-6 border-b-2 border-gray-100"></div>
+                
+                <div class="absolute -left-4 top-[40%] transform -rotate-90 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Продуктивность</div>
+                <div class="absolute bottom-4 left-[45%] text-[10px] font-bold text-gray-400 uppercase tracking-widest">Время</div>
+
+                <svg viewBox="0 0 800 400" class="w-full h-full overflow-visible absolute inset-0 z-10" preserveAspectRatio="none">
+                    <path d="M 50 350 L 750 50" stroke="#9CA3AF" stroke-width="3" stroke-dasharray="10 10" fill="none" class="path-plan" />
+                    <path d="M 50 350 C 120 150, 180 50, 220 200 C 260 350, 180 380, 150 280 C 120 180, 300 100, 350 250 C 400 400, 300 350, 420 300 C 500 250, 520 100, 580 150 C 640 200, 520 350, 580 350 C 620 350, 700 300, 750 320" stroke="#8B7EC8" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round" class="path-reality drop-shadow-[0_8px_16px_rgba(139,126,200,0.3)]" />
+                </svg>
+
+                <div class="star-icon absolute w-12 h-12 bg-blyaner-lime rounded-full border-4 border-white shadow-lg flex items-center justify-center text-blyaner-dark z-20" style="top: 12.5%; left: 93.75%; transform: translate(-50%, -50%) scale(0);">
+                    <i class="ph-fill ph-shooting-star text-2xl"></i>
+                </div>
+
+                <div class="bed-icon absolute w-14 h-14 bg-blyaner-dark rounded-full border-4 border-white shadow-xl flex items-center justify-center text-white z-20" style="top: 80%; left: 93.75%; transform: translate(-50%, -50%) scale(0);">
+                    <i class="ph-fill ph-bed text-2xl"></i>
+                </div>
+
+                <div class="absolute top-[25%] left-[20%] text-xs font-bold text-gray-500 -rotate-12 bg-white/80 px-2 py-1 rounded backdrop-blur">"Отвлеклась на рилс"</div>
+                <div class="absolute top-[65%] left-[45%] text-xs font-bold text-gray-500 rotate-6 bg-white/80 px-2 py-1 rounded backdrop-blur">"Выпила 3-й кофе"</div>
+                <div class="absolute top-[20%] left-[65%] text-xs font-bold text-gray-500 -rotate-6 bg-white/80 px-2 py-1 rounded backdrop-blur">"Экзистенциальный кризис"</div>
+
+            </div>
+        </div>
+
+        <!-- ================= ТЕМНЫЙ БЛОК ================= -->
+        <div id="dark-block" class="bg-blyaner-sidebar rounded-[40px] p-10 md:p-14 shadow-[0_30px_60px_rgba(139,126,200,0.2)] relative overflow-hidden flex flex-col gap-10 border border-blyaner-purpleDark/30">
+            
+            <div class="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
+            <div class="absolute bottom-0 left-0 w-96 h-96 bg-white/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 pointer-events-none"></div>
+
+            <div class="relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-8">
+                <div class="max-w-3xl">
+                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-panel text-white font-bold text-sm mb-6 uppercase tracking-widest border border-white/20">
+                        <i class="ph-bold ph-chart-line-up"></i>
+                        Ожидание vs Реальность
+                    </div>
+                    <h2 class="text-4xl md:text-5xl font-black text-white leading-tight">
+                        Блянер не исправит кривую.
+                    </h2>
+                    <p class="text-xl text-white/70 font-medium mt-4">
+                        Но хотя бы измерит, сколько времени ты в ней провел.
+                    </p>
+                </div>
+
+                <div class="flex flex-col gap-3 shrink-0 glass-panel p-5 rounded-2xl border border-white/10 shadow-lg">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-1 border-t-2 border-dashed border-white/50"></div>
+                        <span class="text-xs font-bold text-white/70 uppercase tracking-wide">План на день</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-2 rounded-full bg-blyaner-lime"></div>
+                        <span class="text-xs font-black text-white uppercase tracking-wide">Реальность</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="relative w-full h-[450px] mt-2 glass-panel rounded-3xl border border-white/10 shadow-inner p-6 overflow-hidden">
+                
+                <div class="absolute left-6 top-6 bottom-12 border-l border-white/20"></div>
+                <div class="absolute left-6 bottom-12 right-6 border-b border-white/20"></div>
+                
+                <div class="absolute -left-4 top-[40%] transform -rotate-90 text-[10px] font-bold text-white/40 uppercase tracking-widest">Продуктивность</div>
+                <div class="absolute bottom-4 left-[45%] text-[10px] font-bold text-white/40 uppercase tracking-widest">Время</div>
+
+                <svg viewBox="0 0 800 400" class="w-full h-full overflow-visible absolute inset-0 z-10" preserveAspectRatio="none">
+                    <path d="M 50 350 L 750 50" stroke="rgba(255,255,255,0.3)" stroke-width="3" stroke-dasharray="10 10" fill="none" class="path-plan" />
+                    <path d="M 50 350 C 120 150, 180 50, 220 200 C 260 350, 180 380, 150 280 C 120 180, 300 100, 350 250 C 400 400, 300 350, 420 300 C 500 250, 520 100, 580 150 C 640 200, 520 350, 580 350 C 620 350, 700 300, 750 320" stroke="#D4E84D" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round" class="path-reality drop-shadow-[0_8px_16px_rgba(0,0,0,0.15)]" />
+                </svg>
+
+                <div class="star-icon absolute w-12 h-12 bg-white/10 backdrop-blur rounded-full border border-white/30 flex items-center justify-center text-white z-20" style="top: 12.5%; left: 93.75%; transform: translate(-50%, -50%) scale(0);">
+                    <i class="ph-bold ph-shooting-star text-2xl"></i>
+                </div>
+
+                <div class="bed-icon absolute w-14 h-14 bg-white rounded-full shadow-2xl flex items-center justify-center text-blyaner-sidebar z-20" style="top: 80%; left: 93.75%; transform: translate(-50%, -50%) scale(0);">
+                    <i class="ph-fill ph-bed text-3xl"></i>
+                </div>
+
+                <div class="absolute top-[25%] left-[20%] text-xs font-bold text-white/80 -rotate-12 bg-white/10 px-3 py-1.5 rounded-full border border-white/10 backdrop-blur">"Отвлеклась на рилс"</div>
+                <div class="absolute top-[65%] left-[45%] text-xs font-bold text-white/80 rotate-6 bg-white/10 px-3 py-1.5 rounded-full border border-white/10 backdrop-blur">"Выпила 3-й кофе"</div>
+                <div class="absolute top-[20%] left-[65%] text-xs font-bold text-white/80 -rotate-6 bg-white/10 px-3 py-1.5 rounded-full border border-white/10 backdrop-blur">"Экзистенциальный кризис"</div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const bodyBg = document.getElementById('body-bg');
+        const lightBlock = document.getElementById('light-block');
+        const darkBlock = document.getElementById('dark-block');
+        const themeIcon = document.getElementById('theme-icon');
+        const themeToggle = document.getElementById('theme-toggle');
+        const container = document.getElementById('graphs-container');
+
+        let isDark = true; // Начинаем с фиолетовой версии
+
+        function restartAnimations() {
+            container.classList.add('restart-animation');
+            void container.offsetWidth; // trigger reflow
+            container.classList.remove('restart-animation');
+        }
+
+        themeToggle.addEventListener('click', () => {
+            isDark = !isDark;
+            
+            if (isDark) {
+                // Переключаем на темную (фиолетовую) версию
+                lightBlock.classList.add('hidden');
+                darkBlock.classList.remove('hidden');
+                bodyBg.className = 'antialiased py-20 px-6 bg-[#F4F3F8]';
+                themeIcon.className = 'ph-fill ph-sun text-2xl text-blyaner-lime';
+                themeToggle.className = 'w-14 h-14 bg-blyaner-dark rounded-full shadow-lg border border-gray-700 flex items-center justify-center hover:scale-110 transition-transform';
+            } else {
+                // Переключаем на светлую (серую) версию
+                darkBlock.classList.add('hidden');
+                lightBlock.classList.remove('hidden');
+                bodyBg.className = 'antialiased py-20 px-6 bg-[#8B7EC8]';
+                themeIcon.className = 'ph-fill ph-moon text-2xl text-blyaner-purple';
+                themeToggle.className = 'w-14 h-14 bg-white rounded-full shadow-lg border border-gray-200 flex items-center justify-center hover:scale-110 transition-transform';
+            }
+            
+            restartAnimations();
+        });
+    </script>
+</body>
+</html>
