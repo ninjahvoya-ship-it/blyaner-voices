@@ -26,27 +26,46 @@
     </script>
     <style>
         body { font-family: 'Inter', sans-serif; background: #ffffff; color: #2D2B3D; overflow-x: hidden; }
+        
+        /* Плавная анимация левитации (только по оси Y) */
         @keyframes float-slow {
-            0%, 100% { transform: translateY(0px) rotate(var(--rotation)); }
-            50% { transform: translateY(-8px) rotate(calc(var(--rotation) + 2deg)); }
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-12px); }
         }
-        .sticker {
+        
+        /* Обертка отвечает за левитацию и порядок слоев */
+        .sticker-wrapper {
             position: relative;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            cursor: pointer;
-            animation: float-slow 7s ease-in-out infinite;
             z-index: 10;
+            animation: float-slow 7s ease-in-out infinite;
         }
-        .sticker:hover {
-            transform: scale(1.15) rotate(0deg) translateY(-5px) !important;
-            z-index: 100 !important;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.2);
+        
+        /* При наведении обертка поднимается над всеми */
+        .sticker-wrapper:hover {
+            z-index: 100;
         }
+
+        /* Сама карточка отвечает за наклон и плавный hover */
+        .sticker-card {
+            transform: rotate(var(--rotation));
+            /* Очень плавная кривая анимации, без резких скачков */
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); 
+            cursor: pointer;
+            will-change: transform, box-shadow;
+        }
+
+        /* При наведении карточка выравнивается, увеличивается и получает красивую тень */
+        .sticker-wrapper:hover .sticker-card {
+            transform: rotate(0deg) scale(1.12) translateY(-10px) !important;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+        }
+
         .delay-1 { animation-delay: 0.5s; }
         .delay-2 { animation-delay: 1s; }
         .delay-3 { animation-delay: 1.5s; }
         .delay-4 { animation-delay: 2s; }
         .delay-5 { animation-delay: 2.5s; }
+        
         .noise-bg {
             background-color: #F4F3F8;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
@@ -54,14 +73,15 @@
     </style>
 </head>
 <body class="antialiased">
-    <section class="noise-bg relative border-y border-gray-200 pt-20 pb-24 overflow-x-hidden min-h-screen">
+    <section class="noise-bg relative border-y border-gray-200 pt-20 pb-32 overflow-x-hidden min-h-screen flex flex-col">
         
-        <div class="max-w-4xl mx-auto text-center relative z-20 px-6 mb-12">
+        <div class="max-w-4xl mx-auto text-center relative z-20 px-6 mb-16">
             <h2 class="text-4xl lg:text-5xl font-black mb-4 text-[#2D2B3D]">Внутренние голоса</h2>
             <p class="text-lg text-gray-500 font-medium">Что думает твой мозг, когда ты пытаешься спланировать неделю.</p>
         </div>
 
-        <div class="flex flex-wrap justify-center items-center w-full max-w-[1500px] mx-auto px-4" id="stickers-container">
+        <!-- Контейнер стал намного шире (1800px) и имеет боковые отступы (px-8) -->
+        <div class="flex flex-wrap justify-center items-center w-full max-w-[1800px] mx-auto px-8 md:px-16" id="stickers-container">
             <!-- Stickers will be generated here by JS -->
         </div>
     </section>
@@ -121,23 +141,24 @@
             const delay = Math.floor(Math.random() * 5) + 1;
             
             let mt = Math.floor(Math.random() * (10 - (-20) + 1)) + (-20);
-            let ml = Math.floor(Math.random() * (-10 - (-25) + 1)) + (-25);
-            if (i % 6 === 0) ml = 0;
+            let ml = Math.floor(Math.random() * (-5 - (-25) + 1)) + (-25);
 
-            const div = document.createElement('div');
-            div.className = `sticker delay-${delay} ${style.card} p-5 rounded-3xl shadow-xl border shrink-0`;
-            div.style.cssText = `width:${w}px; margin-top:${mt}px; margin-left:${ml}px; margin-bottom:-15px; --rotation:${rot}deg; transform:rotate(${rot}deg);`;
+            const wrapper = document.createElement('div');
+            wrapper.className = `sticker-wrapper delay-${delay} shrink-0`;
+            wrapper.style.cssText = `margin-top:${mt}px; margin-left:${ml}px; margin-bottom:-15px;`;
             
-            div.innerHTML = `
-                <p class="font-bold text-base leading-snug mb-4">${phrase}</p>
-                <div class="flex items-center gap-2 ${style.tag_color}">
-                    <div class="w-6 h-6 rounded-full ${style.icon_bg} ${style.icon_color} flex items-center justify-center shrink-0">
-                        <i class="ph-fill ${icon} text-xs"></i>
+            wrapper.innerHTML = `
+                <div class="sticker-card ${style.card} p-5 rounded-3xl shadow-lg border w-full h-full flex flex-col justify-between" style="width:${w}px; min-height:130px; --rotation:${rot}deg;">
+                    <p class="font-bold text-base leading-snug mb-5">${phrase}</p>
+                    <div class="flex items-center gap-2 ${style.tag_color}">
+                        <div class="w-6 h-6 rounded-full ${style.icon_bg} ${style.icon_color} flex items-center justify-center shrink-0">
+                            <i class="ph-fill ${icon} text-xs"></i>
+                        </div>
+                        <p class="text-[10px] font-bold uppercase tracking-widest">${tag}</p>
                     </div>
-                    <p class="text-[10px] font-bold uppercase tracking-widest">${tag}</p>
                 </div>
             `;
-            container.appendChild(div);
+            container.appendChild(wrapper);
         });
     </script>
 </body>
