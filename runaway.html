@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Блянер — Выбор за тобой</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        blyaner: {
+                            purple: '#8B7EC8',
+                            purpleDark: '#6A5AAB',
+                            lime: '#D4E84D',
+                            dark: '#2D2B3D',
+                            gray: '#F4F3F8',
+                            sidebar: '#8B7EC8'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #ffffff; color: #2D2B3D; }
+
+        /* Анимация для убегающей кнопки */
+        #runaway-btn {
+            position: absolute;
+            transition: top 0.25s ease-out, left 0.25s ease-out;
+            will-change: top, left;
+        }
+
+        .noise-bg {
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+        }
+    </style>
+</head>
+<body class="antialiased py-20 px-6">
+
+    <div class="max-w-7xl mx-auto">
+        
+        <div class="text-center mb-12">
+            <h2 class="text-4xl md:text-5xl font-black text-blyaner-dark mb-4">Выбор за тобой</h2>
+            <p class="text-xl text-gray-500 font-medium">Сделать сейчас или попытаться отложить?</p>
+        </div>
+
+        <div class="flex flex-col lg:flex-row gap-6">
+            
+            <!-- ЛЕВАЯ ЧАСТЬ (Прокрастинация) -->
+            <div id="runaway-container" class="flex-1 bg-blyaner-gray noise-bg rounded-[40px] p-10 md:p-14 flex flex-col items-center justify-center text-center relative overflow-hidden min-h-[450px] border border-gray-100 shadow-inner">
+                <div class="relative z-10 pointer-events-none mb-10">
+                    <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm text-gray-400">
+                        <i class="ph-fill ph-calendar-x text-3xl"></i>
+                    </div>
+                    <h3 class="text-3xl font-black text-blyaner-dark mb-3">Я подумаю об этом завтра</h3>
+                    <p class="text-gray-500 font-medium max-w-sm mx-auto">Нажми эту кнопку, чтобы с чистой совестью перенести все задачи на следующий день.</p>
+                </div>
+
+                <!-- УБЕГАЮЩАЯ КНОПКА -->
+                <button id="runaway-btn" class="px-8 py-4 bg-white text-gray-500 border-2 border-gray-200 font-bold rounded-full shadow-sm hover:shadow-md flex items-center gap-2 whitespace-nowrap z-20">
+                    <i class="ph-bold ph-clock-counter-clockwise text-lg"></i>
+                    Отложить на завтра
+                </button>
+            </div>
+
+            <!-- ПРАВАЯ ЧАСТЬ (Работаем) -->
+            <div class="flex-1 bg-blyaner-sidebar rounded-[40px] p-10 md:p-14 flex flex-col items-center justify-center text-center relative overflow-hidden min-h-[450px] shadow-xl border border-blyaner-purpleDark/30 group">
+                
+                <!-- Блики для красоты -->
+                <div class="absolute top-0 right-0 w-80 h-80 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none transition-transform duration-1000 group-hover:scale-110"></div>
+                <div class="absolute bottom-0 left-0 w-80 h-80 bg-blyaner-lime/20 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 pointer-events-none transition-transform duration-1000 group-hover:scale-110"></div>
+
+                <div class="relative z-10 mb-10">
+                    <div class="w-16 h-16 bg-white/20 backdrop-blur-md border border-white/30 rounded-full flex items-center justify-center mx-auto mb-6 text-white">
+                        <i class="ph-fill ph-rocket-launch text-3xl"></i>
+                    </div>
+                    <h3 class="text-3xl font-black text-white mb-3">Я сделаю это сегодня</h3>
+                    <p class="text-white/70 font-medium max-w-sm mx-auto">Пора перестать себя обманывать. Заходим, закрываем таски, идём отдыхать по-настоящему.</p>
+                </div>
+
+                <!-- СТАТИЧНАЯ КНОПКА -->
+                <button class="relative z-20 px-8 py-4 bg-blyaner-lime text-blyaner-dark font-bold rounded-full shadow-xl hover:scale-105 hover:shadow-2xl transition-all duration-300 flex items-center gap-2">
+                    <i class="ph-bold ph-sign-in text-lg"></i>
+                    Войти в Блянер
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const btn = document.getElementById('runaway-btn');
+        const container = document.getElementById('runaway-container');
+
+        // Устанавливаем изначальную позицию кнопки по центру контейнера
+        function centerButton() {
+            const containerRect = container.getBoundingClientRect();
+            const btnRect = btn.getBoundingClientRect();
+            btn.style.left = `${(containerRect.width - btnRect.width) / 2}px`;
+            btn.style.top = `${containerRect.height - 120}px`; // Чуть ниже текста
+        }
+
+        // При загрузке и ресайзе центрируем
+        window.addEventListener('load', centerButton);
+        window.addEventListener('resize', centerButton);
+
+        // Убегание
+        btn.addEventListener('mouseenter', () => {
+            const containerRect = container.getBoundingClientRect();
+            const btnRect = btn.getBoundingClientRect();
+            
+            // Высчитываем безопасные границы, чтобы кнопка не улетала за край блока
+            const padding = 20;
+            const maxX = containerRect.width - btnRect.width - padding;
+            const maxY = containerRect.height - btnRect.height - padding;
+            
+            const randomX = Math.max(padding, Math.floor(Math.random() * maxX));
+            const randomY = Math.max(padding, Math.floor(Math.random() * maxY));
+            
+            btn.style.left = `${randomX}px`;
+            btn.style.top = `${randomY}px`;
+        });
+        
+        // Для мобилок - убегает по клику (чтобы тоже бесило)
+        btn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            btn.dispatchEvent(new Event('mouseenter'));
+        });
+    </script>
+</body>
+</html>
